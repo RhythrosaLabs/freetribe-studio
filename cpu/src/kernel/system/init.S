@@ -80,8 +80,8 @@
         .set  UND_STACK_SIZE, 0x8
         .set  ABT_STACK_SIZE, 0x8
         .set  FIQ_STACK_SIZE, 0x8
-        .set  IRQ_STACK_SIZE, 0x600
-        .set  SVC_STACK_SIZE, 0x200
+        .set  IRQ_STACK_SIZE, 0x100
+        .set  SVC_STACK_SIZE, 0x800
 
 @
 @ to set the mode bits in CPSR for different modes
