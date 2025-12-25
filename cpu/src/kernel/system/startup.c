@@ -153,26 +153,28 @@ static void _boot_abort(void);
  **/
 void start_boot(void) {
 
-    // Enable write-protection for registers of SYSCFG module.
-    SysCfgRegistersLock();
+    // Already setup in Hacktribe sysex loader.
 
-    // Disable write-protection for registers of SYSCFG module.
-    SysCfgRegistersUnlock();
-
-    /// TODO: Configure Master Priority Control
-
-    _psc0_init();
-    _psc1_init();
-
-    // Set the PLL0 to generate 300MHz for ARM.
-    _pll0_init(PLL_CLK_SRC, PLL0_MUL, PLL0_PREDIV, PLL0_POSTDIV, PLL0_DIV1,
-               PLL0_DIV3, PLL0_DIV7);
-
-    _pll1_init(PLL1_MUL, PLL1_POSTDIV, PLL1_DIV1, PLL1_DIV2, PLL1_DIV3);
-
-    per_ddr_init();
-
-    _config_cache_mmu();
+    // // Enable write-protection for registers of SYSCFG module.
+    // SysCfgRegistersLock();
+    //
+    // // Disable write-protection for registers of SYSCFG module.
+    // SysCfgRegistersUnlock();
+    //
+    // /// TODO: Configure Master Priority Control
+    //
+    // _psc0_init();
+    // _psc1_init();
+    //
+    // // Set the PLL0 to generate 300MHz for ARM.
+    // _pll0_init(PLL_CLK_SRC, PLL0_MUL, PLL0_PREDIV, PLL0_POSTDIV, PLL0_DIV1,
+    //            PLL0_DIV3, PLL0_DIV7);
+    //
+    // _pll1_init(PLL1_MUL, PLL1_POSTDIV, PLL1_DIV1, PLL1_DIV2, PLL1_DIV3);
+    //
+    // per_ddr_init();
+    //
+    // _config_cache_mmu();
 
     // if (per_ddr_memtest() != 0) {
     //     _boot_abort();
