@@ -39,6 +39,9 @@ under the terms of the GNU Affero General Public License as published by
 
 #include "freetribe.h"
 
+#include <stdlib.h>
+
+#include "ft_error.h"
 #include "gui_task.h"
 
 #include "test_button.h"
@@ -53,6 +56,7 @@ under the terms of the GNU Affero General Public License as published by
 
 typedef enum {
     STATE_INIT,
+    STATE_MALLOC,
     STATE_PRINT,
     STATE_DISPLAY,
     STATE_BUTTON,
@@ -76,6 +80,7 @@ static t_status _init(void);
 static void _button_callback(uint8_t button, bool state);
 
 static t_status _test_print(void);
+static t_status _test_malloc(void);
 static t_status _test_shutdown(void);
 
 /*----- Extern function implementations ------------------------------*/
@@ -89,9 +94,15 @@ void test_task(void) {
     // Initialise template task.
     case STATE_INIT:
         if (error_check(_init()) == SUCCESS) {
-            state = STATE_PRINT;
+            state = STATE_MALLOC;
         }
         // Remain in INIT state until initialisation successful.
+        break;
+
+    case STATE_MALLOC:
+        if (_test_malloc() == SUCCESS) {
+            state = STATE_PRINT;
+        }
         break;
 
     case STATE_PRINT:
@@ -191,6 +202,23 @@ static t_status _test_print(void) {
 
     // Assume success to move on to next test.
     return SUCCESS;
+}
+
+static t_status _test_malloc(void) {
+
+    t_status result = ERROR;
+
+    uint32_t *address = NULL;
+    uint32_t length = 0x100;
+
+    if ((address = malloc(length))) {
+
+        ft_printf("Allocated %i bytes at %#10x", length, address);
+        ft_printf("Memory allocation test passed.");
+        result = SUCCESS;
+    }
+
+    return result;
 }
 
 static t_status _test_shutdown(void) {
