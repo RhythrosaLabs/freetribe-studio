@@ -5,7 +5,7 @@
 OUTPUT_FORMAT("elf32-littlearm", "elf32-littlearm", "elf32-littlearm")
 OUTPUT_ARCH(arm)
 
-HEAP_SIZE = 0x2000;
+HEAP_SIZE = 0x20000;
 STACK_SIZE = 0x2000;
 VECTOR_TABLE_SIZE = 0x80;
 
@@ -54,10 +54,12 @@ SECTIONS
 	.heap ALIGN(8) :
 	{
         _heap_start = .;
+        __heap_start = .;
 
 	     . += HEAP_SIZE;
 
         _heap_end = .;
+        __heap_end = .;
 	} > EXT_RAM
 
 	.stack :
