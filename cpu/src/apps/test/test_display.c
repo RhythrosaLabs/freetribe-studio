@@ -76,7 +76,7 @@ t_status test_display(void) {
 
     case STATE_SET_INIT:
 
-        ft_printf("Display test:");
+        ft_printf("Test display...");
 
         ft_fill_frame(0, 0, 127, 63, 0);
         ft_printf("Press [Play] if all pixels set.");
@@ -113,7 +113,7 @@ t_status test_display(void) {
     case STATE_RESULT:
 
         if (passed_set && passed_clear) {
-            ft_printf("Display test passed.");
+            ft_printf("Display test PASSED.\n");
             result = SUCCESS;
         }
         break;

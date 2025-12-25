@@ -56,6 +56,7 @@ under the terms of the GNU Affero General Public License as published by
 
 typedef enum {
     STATE_INIT,
+    STATE_INFO,
     STATE_MALLOC,
     STATE_PRINT,
     STATE_DISPLAY,
@@ -73,9 +74,13 @@ static bool g_test_confirmed;
 
 /*----- Extern variable definitions ----------------------------------*/
 
+extern uint8_t _heap_start;
+extern uint8_t _heap_end;
+
 /*----- Static function prototypes -----------------------------------*/
 
 static t_status _init(void);
+static t_status _print_info(void);
 
 static void _button_callback(uint8_t button, bool state);
 
@@ -94,9 +99,15 @@ void test_task(void) {
     // Initialise template task.
     case STATE_INIT:
         if (error_check(_init()) == SUCCESS) {
-            state = STATE_MALLOC;
+            state = STATE_INFO;
         }
         // Remain in INIT state until initialisation successful.
+        break;
+
+    case STATE_INFO:
+        if (_print_info() == SUCCESS) {
+            state = STATE_MALLOC;
+        }
         break;
 
     case STATE_MALLOC:
@@ -176,6 +187,16 @@ static t_status _init(void) {
     return result;
 }
 
+static t_status _print_info(void) {
+
+    t_status result = ERROR;
+
+    // Print some stuff...
+
+    result = SUCCESS;
+    return result;
+}
+
 static void _button_callback(uint8_t button, bool state) {
 
     switch (button) {
@@ -198,7 +219,8 @@ static void _button_callback(uint8_t button, bool state) {
 
 static t_status _test_print(void) {
 
-    ft_printf("Print test passed.");
+    ft_printf("Test print...");
+    ft_printf("Print test PASSED.\n");
 
     // Assume success to move on to next test.
     return SUCCESS;
@@ -211,11 +233,20 @@ static t_status _test_malloc(void) {
     uint32_t *address = NULL;
     uint32_t length = 0x100;
 
+    ft_printf("Test memory allocation...");
+
     if ((address = malloc(length))) {
 
+        ft_printf("Heap start at %#10x", _heap_start);
+        ft_printf("Heap end at %#10x", _heap_end);
+        ft_printf("Heap size = %x bytes", _heap_end - _heap_start);
+
         ft_printf("Allocated %i bytes at %#10x", length, address);
-        ft_printf("Memory allocation test passed.");
+        ft_printf("Memory allocation test PASSED.\n");
         result = SUCCESS;
+
+    } else {
+        ft_printf("Memory allocation test FAILED.\n");
     }
 
     return result;
@@ -223,7 +254,7 @@ static t_status _test_malloc(void) {
 
 static t_status _test_shutdown(void) {
 
-    ft_printf("Test complete.");
+    ft_printf("Test shutdown...");
     ft_printf("Press [Exit] to power off.");
 
     return ERROR;
