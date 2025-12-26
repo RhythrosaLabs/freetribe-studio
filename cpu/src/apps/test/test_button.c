@@ -67,9 +67,9 @@ t_status test_button(void) {
     // Initialise test.
     case STATE_INIT:
 
-        ft_printf("Test button...");
-        ft_printf("Press [Play] to confirm pass.");
-        gui_print(8, 32, "Press [Play].");
+        ft_printf("Test button:");
+        ft_printf("> Press [Play] to confirm pass...");
+        gui_print(8, 32, "Press [Play]...");
 
         state = STATE_RUN;
         break;

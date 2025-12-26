@@ -233,7 +233,7 @@ static t_status _test_malloc(void) {
     uint32_t *address = NULL;
     uint32_t length = 0x100;
 
-    ft_printf("Test memory allocation...");
+    ft_printf("Test memory allocation:");
 
     if ((address = malloc(length))) {
 
@@ -254,8 +254,8 @@ static t_status _test_malloc(void) {
 
 static t_status _test_shutdown(void) {
 
-    ft_printf("Test shutdown...");
-    ft_printf("Press [Exit] to power off.");
+    ft_printf("Test shutdown:");
+    ft_printf("> Press [Exit] to power off...");
 
     return ERROR;
 }
