@@ -70,7 +70,6 @@ SECTIONS
 	     . += STACK_SIZE; 
 
         _stack = .;
-        stack = .;
 	} > EXT_RAM
 
     /*

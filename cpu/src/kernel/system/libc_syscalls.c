@@ -67,19 +67,22 @@ under the terms of the GNU Affero General Public License as published by
 
 /*----- Extern function implementations ------------------------------*/
 
+/// TODO: This doesn't really fit what we have in cpu.lds.
+//
 // https://www.embecosm.com/appnotes/ean9/ean9-howto-newlib-1.0.html
 void *_sbrk(int nbytes) {
 
     // Symbol defined by linker map.
-    extern int end; // Start of free memory (as symbol).
+    extern int end;        // Start of free memory (as symbol).
+    extern int _stack_low; // End of free memory.
 
-    // Value set by crt0.S.
-    extern void *stack; // End of free memory.
+    static void *stack_low =
+        (void *)&_stack_low; // Lowest address of stack section.
 
     // The statically held previous end of the heap, with its initialization.
     static void *heap_ptr = (void *)&end; // Previous end.
 
-    if ((stack - (heap_ptr + nbytes)) > STACK_BUFFER) {
+    if ((stack_low - (heap_ptr + nbytes)) > STACK_BUFFER) {
         void *base = heap_ptr;
         heap_ptr += nbytes;
 
