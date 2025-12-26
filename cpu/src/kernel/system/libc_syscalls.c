@@ -67,74 +67,48 @@ under the terms of the GNU Affero General Public License as published by
 
 /*----- Extern function implementations ------------------------------*/
 
-// void *_sbrk(int nbytes) {
-//
-//     // Symbol defined by linker map.
-//     extern int end; // Start of free memory (as symbol).
-//
-//     // Value set by crt0.S.
-//     extern void *stack; // End of free memory.
-//
-//     // The statically held previous end of the heap, with its
-//     initialization.. static void *heap_ptr = (void *)&end; // Previous end.
-//
-//     if ((stack - (heap_ptr + nbytes)) > STACK_BUFFER) {
-//         void *base = heap_ptr;
-//         heap_ptr += nbytes;
-//
-//         return base;
-//     } else {
-//         errno = ENOMEM;
-//         return (void *)-1;
-//     }
-// }
+// https://www.embecosm.com/appnotes/ean9/ean9-howto-newlib-1.0.html
+void *_sbrk(int nbytes) {
 
-void *_sbrk(int incr) {
+    // Symbol defined by linker map.
+    extern int end; // Start of free memory (as symbol).
 
-    /// TODO: FIXME: This is allocating in the stack section.
+    // Value set by crt0.S.
+    extern void *stack; // End of free memory.
 
-    // Defined by the linker.
-    extern uint8_t _heap_end;
+    // The statically held previous end of the heap, with its initialization.
+    static void *heap_ptr = (void *)&end; // Previous end.
 
-    static uint8_t *heap_end;
+    if ((stack - (heap_ptr + nbytes)) > STACK_BUFFER) {
+        void *base = heap_ptr;
+        heap_ptr += nbytes;
 
-    uint8_t *prev_heap_end;
-
-    if (heap_end == 0) {
-        heap_end = &_heap_end;
+        return base;
+    } else {
+        errno = ENOMEM;
+        return (void *)-1;
     }
-    prev_heap_end = heap_end;
-
-    /// TODO: Check for collision.
-    //
-    // if (heap_end + incr > stack_ptr) {
-    //     // write(1, "Heap and stack collision\n", 25);
-    //     // abort();
-    // }
-
-    heap_end += incr;
-    return (void *)prev_heap_end;
 }
 
-// int _write(int file, char *buffer, int length) {
-//
-//     int result = 0;
-//
-//     // We only handle stdout and stderr.
-//     if ((file != STDOUT_FILENO) && (file != STDERR_FILENO)) {
-//
-//         errno = EBADF;
-//         result = -1;
-//     }
-//
-//     while (length--) {
-//
-//         svc_midi_send_byte(*buffer++);
-//         result++;
-//     }
-//
-//     return result;
-// }
+int _write(int file, char *buffer, int length) {
+
+    int result = 0;
+
+    // We only handle stdout and stderr.
+    if ((file != STDOUT_FILENO) && (file != STDERR_FILENO)) {
+
+        errno = EBADF;
+        result = -1;
+    }
+
+    while (length--) {
+
+        svc_midi_send_byte(*buffer++);
+        result++;
+    }
+
+    return result;
+}
 
 int _close(int file) { return -1; }
 

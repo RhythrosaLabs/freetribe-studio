@@ -41,8 +41,8 @@ ASM_FLAGS := -x assembler-with-cpp
 
 # Linker options.
 LDFLAGS := -e start -u start -u __aeabi_uidiv -u __aeabi_idiv $(LPATH) -lm -lc -lgcc  \
-					 -T cpu.lds -Xlinker -Map -Xlinker $(BUILD_DIR)/boot.map -specs=picolibc.specs \
-					 -Wl,--gc-sections,--print-memory-usage,--no-warn-rwx-segments 
+					 -T cpu.lds -Xlinker -Map -Xlinker $(BUILD_DIR)/boot.map -specs=nano.specs \
+					 -Wl,--gc-sections,--print-memory-usage,--no-warn-rwx-segments
 # Binary options.
 BIN_FLAGS := -O binary
 

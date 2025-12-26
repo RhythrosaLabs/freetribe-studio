@@ -50,16 +50,15 @@ SECTIONS
     . = ALIGN(8);
 
 	_bss_end = .;
+    end = .;
 	
 	.heap ALIGN(8) :
 	{
         _heap_start = .;
-        __heap_start = .;
 
 	     . += HEAP_SIZE;
 
         _heap_end = .;
-        __heap_end = .;
 	} > EXT_RAM
 
 	.stack :
@@ -71,6 +70,7 @@ SECTIONS
 	     . += STACK_SIZE; 
 
         _stack = .;
+        stack = .;
 	} > EXT_RAM
 
     /*
