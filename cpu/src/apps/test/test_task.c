@@ -74,8 +74,8 @@ static bool g_test_confirmed;
 
 /*----- Extern variable definitions ----------------------------------*/
 
-extern uint8_t _heap_start;
-extern uint8_t _heap_end;
+extern uint8_t *_heap_start;
+extern uint8_t *_heap_end;
 
 /*----- Static function prototypes -----------------------------------*/
 
@@ -181,7 +181,7 @@ static t_status _init(void) {
 
     ft_register_panel_callback(BUTTON_EVENT, _button_callback);
 
-    ft_printf("Freetribe Test");
+    ft_printf("Freetribe Test\n");
 
     result = SUCCESS;
     return result;
@@ -237,11 +237,11 @@ static t_status _test_malloc(void) {
 
     if ((address = malloc(length))) {
 
-        ft_printf("Heap start at %#10x", _heap_start);
-        ft_printf("Heap end at %#10x", _heap_end);
-        ft_printf("Heap size = %x bytes", _heap_end - _heap_start);
+        ft_printf("- Heap start at %#10x", &_heap_start);
+        ft_printf("- Heap end at %#10x", &_heap_end);
+        ft_printf("- Heap size = %i bytes", &_heap_end - &_heap_start);
 
-        ft_printf("Allocated %i bytes at %#10x", length, address);
+        ft_printf("- Allocated %i bytes at %#10x", length, address);
         ft_printf("Memory allocation test PASSED.\n");
         result = SUCCESS;
 
