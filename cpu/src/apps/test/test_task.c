@@ -257,7 +257,7 @@ static t_status _test_shutdown(void) {
     ft_printf("Test shutdown:");
     ft_printf("> Press [Exit] to power off...");
 
-    return ERROR;
+    return SUCCESS;
 }
 
 /*----- End of file --------------------------------------------------*/
