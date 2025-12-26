@@ -55,6 +55,8 @@ under the terms of the GNU Affero General Public License as published by
 
 /*----- Macros -------------------------------------------------------*/
 
+#define STACK_BUFFER 65536 // Reserved stack space in bytes.
+
 /*----- Typedefs -----------------------------------------------------*/
 
 /*----- Static variable definitions ----------------------------------*/
@@ -65,7 +67,31 @@ under the terms of the GNU Affero General Public License as published by
 
 /*----- Extern function implementations ------------------------------*/
 
+// void *_sbrk(int nbytes) {
+//
+//     // Symbol defined by linker map.
+//     extern int end; // Start of free memory (as symbol).
+//
+//     // Value set by crt0.S.
+//     extern void *stack; // End of free memory.
+//
+//     // The statically held previous end of the heap, with its
+//     initialization.. static void *heap_ptr = (void *)&end; // Previous end.
+//
+//     if ((stack - (heap_ptr + nbytes)) > STACK_BUFFER) {
+//         void *base = heap_ptr;
+//         heap_ptr += nbytes;
+//
+//         return base;
+//     } else {
+//         errno = ENOMEM;
+//         return (void *)-1;
+//     }
+// }
+
 void *_sbrk(int incr) {
+
+    /// TODO: FIXME: This is allocating in the stack section.
 
     // Defined by the linker.
     extern uint8_t _heap_end;
@@ -90,25 +116,25 @@ void *_sbrk(int incr) {
     return (void *)prev_heap_end;
 }
 
-int _write(int file, char *buffer, int length) {
-
-    int result = 0;
-
-    // We only handle stdout and stderr.
-    if ((file != STDOUT_FILENO) && (file != STDERR_FILENO)) {
-
-        errno = EBADF;
-        result = -1;
-    }
-
-    while (length--) {
-
-        svc_midi_send_byte(*buffer++);
-        result++;
-    }
-
-    return result;
-}
+// int _write(int file, char *buffer, int length) {
+//
+//     int result = 0;
+//
+//     // We only handle stdout and stderr.
+//     if ((file != STDOUT_FILENO) && (file != STDERR_FILENO)) {
+//
+//         errno = EBADF;
+//         result = -1;
+//     }
+//
+//     while (length--) {
+//
+//         svc_midi_send_byte(*buffer++);
+//         result++;
+//     }
+//
+//     return result;
+// }
 
 int _close(int file) { return -1; }
 
