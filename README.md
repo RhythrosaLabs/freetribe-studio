@@ -40,8 +40,6 @@ It keeps the upstream firmware and history, then adds a practical companion UI f
 - Optional Audio Unit probe for checking whether installed units can be instantiated
 - Roadmap and device-sync simulation surfaces for planning future hardware integration
 
-![Freetribe Studio mobile layout](docs/screenshots/studio-mobile.png)
-
 ## Quick start
 
 ### Browser-only mode
@@ -80,7 +78,7 @@ PORT=8090 npm run studio
 
 ## Browser support
 
-The core Studio UI works in current desktop and mobile browsers. Web MIDI requires a browser that exposes `navigator.requestMIDIAccess`, typically Chrome or Edge with permission granted. Screen recording requires `getDisplayMedia` and downloads a WebM file when stopped. Audio decoding and preview depend on the browser's Web Audio implementation.
+The Studio is documented and tested here as a computer-first desktop experience. Web MIDI requires a browser that exposes `navigator.requestMIDIAccess`, typically Chrome or Edge with permission granted. Screen recording requires `getDisplayMedia` and downloads a WebM file when stopped. Audio decoding and preview depend on the browser's Web Audio implementation.
 
 ## Repository layout
 
