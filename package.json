@@ -1,0 +1,9 @@
+{
+  "name": "freetribe-studio",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "studio": "node ui/server.mjs",
+    "probe:audio-units": "swiftc native/AudioUnitProbe.swift -o /tmp/freetribe-audio-unit-probe -framework AudioToolbox && /tmp/freetribe-audio-unit-probe"
+  }
+}

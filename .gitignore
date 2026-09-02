@@ -9,6 +9,7 @@ TODO.txt
 .cache
 *.log
 Session.vim
+.playwright-mcp/
 *.gdbinit*
 gdb.txt
 compile_commands.json

@@ -1,8 +1,15 @@
-# Freetribe
+# Freetribe Studio
 
-Freetribe is a free, open-source firmware for Electribe 2, built from the ground
-up using original code and open-source projects. Freetribe aims to provide a
-user-friendly API for connecting control input to audio processing.
+Freetribe Studio is a community fork of [Freetribe](https://github.com/bangcorrupt/freetribe),
+with a browser-based companion for exploring the Electribe 2 performance
+workflow alongside the original open-source firmware project. It aims to make
+hardware experiments, patch design, MIDI routing, and audio module development
+easier to explore.
+
+This repository keeps the upstream firmware and its history while adding the
+Freetribe Studio browser UI, native macOS plugin discovery tools, and related
+research. Studio-specific changes are maintained here; firmware changes should
+be contributed upstream when they are generally useful.
 
 See
 [Getting Started](https://bangcorrupt.github.io/freetribe-docs/getting-started/)
@@ -43,6 +50,56 @@ Some of these are in progress, most should be possible.
 - Preemptive scheduling using FreeRTOS.
 - Embedded Lua and MicroPython.
 - Support for sync ports.
+
+## Freetribe Studio
+
+The repository includes a dependency-free browser companion UI for exploring the
+Freetribe performance workflow. It provides a live module cockpit, selectable
+modules, step sequencer, MIDI and DSP telemetry, patch save/load with JSON
+import/export, a virtual keyboard, optional Web MIDI access, roadmap view,
+sample import with waveform preview, MIDI file import into the step pattern,
+multi-sample library management, bulk upload/delete, sample metadata, sample
+audition, beat-pad programming, roadmap view, device sync simulation, and a
+browser-native screen recording control for making tutorial clips. It also
+includes an advanced transport, non-destructive sample editor with trim/loop/
+pitch/gain/filter preview, and a plugin bridge surface for native VST3 or Audio
+Unit hosting.
+
+To launch it locally:
+
+```sh
+python3 -m http.server 8080 --directory ui
+```
+
+Then open <http://localhost:8080>. The recording control uses the browser's
+screen-sharing permission and downloads a WebM tutorial clip when stopped.
+
+For macOS VST, VST3, and Audio Unit discovery, use the native companion server
+instead:
+
+```sh
+npm run studio
+```
+
+It scans the standard user and system plugin folders and exposes the results to
+the Studio scan control. To verify that installed Audio Units can be instantiated
+by macOS, run `npm run probe:audio-units`. Native VST/VST3 processing still
+requires a host SDK bridge; the browser fallback uses Web Audio.
+
+The ES2 controller research and verified feature boundaries are documented in
+[ELECTRIBE_2_SAMPLER_RESEARCH.md](ELECTRIBE_2_SAMPLER_RESEARCH.md).
+
+The Studio downloads an actual imported `e2sSample.all` file byte-for-byte.
+Uploaded WAV files are kept as browser samples and are not mislabeled as a
+Korg library; binary `.all` creation requires the format encoder.
+
+## Credit and Lineage
+
+Freetribe Studio is based on and forked from
+[bangcorrupt/freetribe](https://github.com/bangcorrupt/freetribe). Please see the
+upstream project for its original authorship, hardware work, acknowledgements,
+and community discussions. This fork retains the upstream AGPL-3.0 license and
+continues to credit the open-source projects listed below.
 
 ## Support for You
 
