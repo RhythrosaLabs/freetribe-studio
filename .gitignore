@@ -3,7 +3,10 @@ Debug/
 binary/
 build/
 scripts/
-docs/
+docs/*
+!docs/
+!docs/screenshots/
+!docs/screenshots/*.png
 dsp/src/common/*
 TODO.txt
 .cache

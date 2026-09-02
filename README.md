@@ -1,144 +1,116 @@
 # Freetribe Studio
 
-Freetribe Studio is a community fork of [Freetribe](https://github.com/bangcorrupt/freetribe),
-with a browser-based companion for exploring the Electribe 2 performance
-workflow alongside the original open-source firmware project. It aims to make
-hardware experiments, patch design, MIDI routing, and audio module development
-easier to explore.
+Freetribe Studio is a community fork of [Freetribe](https://github.com/bangcorrupt/freetribe) with a browser-based control surface for Electribe 2 experiments, patch design, MIDI routing, and audio module development.
 
-This repository keeps the upstream firmware and its history while adding the
-Freetribe Studio browser UI, native macOS plugin discovery tools, and related
-research. Studio-specific changes are maintained here; firmware changes should
-be contributed upstream when they are generally useful.
+It keeps the upstream firmware and history, then adds a practical companion UI for exploring the instrument from a desktop browser. The UI works without a build step; an optional Node.js bridge adds macOS plugin discovery and Audio Unit probing.
 
-See
-[Getting Started](https://bangcorrupt.github.io/freetribe-docs/getting-started/)
-to jump right into the Freetribe API, or
-[Architecture](https://bangcorrupt.github.io/freetribe-docs/architecture/) for a
-deeper look at the system.
+![Freetribe Studio desktop overview](docs/screenshots/studio-overview.png)
 
-## Features
+## What is included
 
-From a user application perspective, Freetribe is currently light on features.
-Most of the hardware initialisation is complete, with driver stacks for much of
-the system. Built on this is a set of services providing a high-level interface
-to the device. Some basic examples are provided, showing how to integrate user
-application code with the Freetribe kernel.
+### Studio workspace
 
-### Existing Features
+- Electribe 2-style 16-part control surface with Sequence, Sound, Insert FX, Master FX, Global, and Data Utility pages
+- 64-step part editor with per-step MIDI output
+- 16-step pattern sequencer with tempo, transport, clock source, reset, and randomize controls
+- Live signal meters, DSP load, buffer status, event log, and MIDI monitor
+- Module selection for Monosynth, Attenuate, and Zontar workflows
 
-- Serial MIDI input and output via TRS port.
-- Set or clear a pixel anywhere in the vast 128x64 dot-matrix.
-- Control backlight RGB (binary).
-- Register callbacks for all of the panel controls.
-- Set and toggle LEDs, with brightness control for those with support.
-- Send commands to the Blackfin DSP and receive feedback.
-- Process audio based on control input.
-- Audio module API similar to many plugin formats.
+### MIDI and patches
 
-### Planned Features
+- Virtual keyboard with note event monitoring
+- Optional Web MIDI input and output in browsers that support it
+- Parameter mapping for Electribe 2 controls with MIDI Learn
+- JSON import and export for patches and MIDI maps
+- Local browser storage for saved patches
+- Standard MIDI file import into the current pattern
 
-Some of these are in progress, most should be possible.
+### Samples and sound design
 
-- High speed DSP control via EMIFA/HostDMA.
-- DMA support for peripheral drivers.
-- USB driver.
-- SD card driver.
-- DSP block processing.
-- Memory protection.
-- Dynamic loading of apps and modules.
-- Preemptive scheduling using FreeRTOS.
-- Embedded Lua and MicroPython.
-- Support for sync ports.
+- WAV, AIFF, and MP3 import with waveform preview
+- Multi-sample library with slots 501-999, metadata, audition, selection, bulk delete, and manifest export
+- Beat-pad programming against the current pattern
+- Non-destructive sample editor with trim, loop, pitch, gain, and low-pass preview controls
+- Original `e2sSample.all` byte-preserving import and download
 
-## Freetribe Studio
+### Native companion
 
-The repository includes a dependency-free browser companion UI for exploring the
-Freetribe performance workflow. It provides a live module cockpit, selectable
-modules, step sequencer, MIDI and DSP telemetry, patch save/load with JSON
-import/export, a virtual keyboard, optional Web MIDI access, roadmap view,
-sample import with waveform preview, MIDI file import into the step pattern,
-multi-sample library management, bulk upload/delete, sample metadata, sample
-audition, beat-pad programming, roadmap view, device sync simulation, and a
-browser-native screen recording control for making tutorial clips. It also
-includes an advanced transport, non-destructive sample editor with trim/loop/
-pitch/gain/filter preview, and a plugin bridge surface for native VST3 or Audio
-Unit hosting.
+- macOS discovery for VST3, VST2, and Audio Unit bundles in standard user and system plugin folders
+- Browser DSP fallback when no native plugin bridge is available
+- Optional Audio Unit probe for checking whether installed units can be instantiated
+- Roadmap and device-sync simulation surfaces for planning future hardware integration
 
-To launch it locally:
+![Freetribe Studio mobile layout](docs/screenshots/studio-mobile.png)
+
+## Quick start
+
+### Browser-only mode
+
+Requirements: Python 3, or any static HTTP server.
 
 ```sh
 python3 -m http.server 8080 --directory ui
 ```
 
-Then open <http://localhost:8080>. The recording control uses the browser's
-screen-sharing permission and downloads a WebM tutorial clip when stopped.
+Open <http://localhost:8080>. This mode includes the full UI, local patch storage, sample tools, pattern editing, and Web MIDI where the browser permits it. It does not provide native plugin discovery.
 
-For macOS VST, VST3, and Audio Unit discovery, use the native companion server
-instead:
+### macOS companion mode
+
+Requirements: macOS, Node.js 18 or newer, and `swiftc` only if Audio Unit probing is needed.
 
 ```sh
 npm run studio
 ```
 
-It scans the standard user and system plugin folders and exposes the results to
-the Studio scan control. To verify that installed Audio Units can be instantiated
-by macOS, run `npm run probe:audio-units`. Native VST/VST3 processing still
-requires a host SDK bridge; the browser fallback uses Web Audio.
+Open <http://localhost:8080>. The native companion serves the same UI and exposes `/api/plugins` for plugin discovery.
 
-The ES2 controller research and verified feature boundaries are documented in
-[ELECTRIBE_2_SAMPLER_RESEARCH.md](ELECTRIBE_2_SAMPLER_RESEARCH.md).
+To build and run the optional Audio Unit probe:
 
-The Studio downloads an actual imported `e2sSample.all` file byte-for-byte.
-Uploaded WAV files are kept as browser samples and are not mislabeled as a
-Korg library; binary `.all` creation requires the format encoder.
+```sh
+npm run probe:audio-units
+```
 
-## Credit and Lineage
+Use **Scan user system** in the Plugin processing bridge. VST processing still requires a host SDK bridge; Audio Unit probing verifies availability but does not replace a production host.
 
-Freetribe Studio is based on and forked from
-[bangcorrupt/freetribe](https://github.com/bangcorrupt/freetribe). Please see the
-upstream project for its original authorship, hardware work, acknowledgements,
-and community discussions. This fork retains the upstream AGPL-3.0 license and
-continues to credit the open-source projects listed below.
+To use another port:
 
-## Support for You
+```sh
+PORT=8090 npm run studio
+```
 
-If you need help with this project, please visit the
-[Freetribe discussion forum](https://github.com/bangcorrupt/freetribe/discussions).
+## Browser support
 
-## Support for Me
+The core Studio UI works in current desktop and mobile browsers. Web MIDI requires a browser that exposes `navigator.requestMIDIAccess`, typically Chrome or Edge with permission granted. Screen recording requires `getDisplayMedia` and downloads a WebM file when stopped. Audio decoding and preview depend on the browser's Web Audio implementation.
 
-Freetribe is free (as in GPL) and always will be. If you would like to support
-my work you are most welcome to
-[become a sponsor](https://github.com/sponsors/bangcorrupt). Freetribe exists
-because people sponsored Hacktribe. Your support helps keep me motivated,
-fuelled and focussed.
+## Repository layout
 
-## Acknowledgements
+| Path | Purpose |
+| --- | --- |
+| `ui/index.html` | Dependency-free Studio interface and client behavior |
+| `ui/server.mjs` | Node.js static server and macOS plugin APIs |
+| `native/AudioUnitProbe.swift` | Optional Audio Unit inspection utility |
+| `ELECTRIBE_2_SAMPLER_RESEARCH.md` | Verified controller research and feature boundaries |
+| `cpu/` | Upstream Electribe CPU firmware and kernel code |
+| `dsp/` | Upstream Blackfin DSP code and modules |
 
-Freetribe would be almost impossible without other open-source projects. The CPU
-drivers are based on [StarterWare](https://www.ti.com/tool/STARTERWARE-SITARA)
-by Texas Instruments. The hardware abstraction, build environment and code
-examples provided the stepping-stone needed to get started.
+## Project status
 
-In much the same way, the DSP drivers are based on
-[monome/aleph](https://github.com/monome/aleph). This showed how to initialise
-the Blackfin processor and configure peripherals. They also provide a public
-domain DSP library, with many of the difficult maths problems packaged into
-convenient unit generators.
+The companion is an exploration and control surface, not a replacement firmware or a finished DAW plugin host. Hardware sync, USB, SD, high-speed DSP transport, native VST hosting, and binary `.all` creation remain separate engineering projects. Imported `.all` files are preserved byte-for-byte; WAV uploads remain browser samples and are not mislabeled as Korg libraries.
 
-MIDI input parsing is based on
-[mikromodular/libmidi](https://github.com/mikromodular/libmidi), with
-sysex/binary conversion borrowed from the
-[Arduino MIDI library](https://github.com/FortySevenEffects/arduino_midi_library/blob/master/src/MIDI.cpp)
-by Francois Best.
+## Contributing
 
-[UGUI](https://github.com/deividAlfa/UGUI) and
-[micromenu](https://github.com/abcminiuser/micromenu-v2) provide a graphical
-interface for user applications.
+Open an issue or pull request with a focused change. For Studio work, include reproduction steps and browser or macOS version details when behavior depends on platform APIs. Firmware changes that are broadly useful should also be proposed to the upstream project.
 
-Special thanks to countless stackoverflow users.
+## Credit and lineage
 
-## License
+This repository is a fork of [bangcorrupt/freetribe](https://github.com/bangcorrupt/freetribe), which provides the original Electribe 2 firmware work, hardware research, API, kernel, DSP foundation, and project history. Please use the upstream repository for its original authorship, discussions, and sponsorship links.
 
-AGPL-3.0.
+The upstream project acknowledges these open-source foundations:
+
+- [StarterWare](https://www.ti.com/tool/STARTERWARE-SITARA) by Texas Instruments for CPU driver foundations
+- [monome/aleph](https://github.com/monome/aleph) for DSP initialization, peripherals, and the public-domain DSP library
+- [mikromodular/libmidi](https://github.com/mikromodular/libmidi) for MIDI input parsing
+- [Arduino MIDI Library](https://github.com/FortySevenEffects/arduino_midi_library) for SysEx and binary conversion references
+- [UGUI](https://github.com/deividAlfa/UGUI) and [micromenu](https://github.com/abcminiuser/micromenu-v2) for embedded UI foundations
+
+Freetribe Studio retains the upstream AGPL-3.0 license. See [LICENSE](LICENSE).
