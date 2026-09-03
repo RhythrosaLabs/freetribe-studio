@@ -53,6 +53,7 @@ under the terms of the GNU Affero General Public License as published by
 /*----- Macros -------------------------------------------------------*/
 
 #define MSG_START 0xf0
+#define SYSTEM_PROFILE_PAYLOAD_LENGTH 12
 
 /*----- Typedefs -----------------------------------------------------*/
 
@@ -541,14 +542,15 @@ static t_status _handle_system_port_state(uint8_t *payload, uint8_t length) {
 
 static t_status _handle_system_profile(uint8_t *payload, uint8_t length) {
 
-    if (length < 12) {
+    if (length < SYSTEM_PROFILE_PAYLOAD_LENGTH) {
         return ERROR;
     }
 
     if (p_system_profile_callback != NULL) {
 
-        uint32_t period = (payload[3] << 24 | payload[2] << 16 |
-                           payload[1] << 8 | payload[0]);
+        uint32_t period = (uint32_t)payload[3] << 24 |
+                  (uint32_t)payload[2] << 16 |
+                  (uint32_t)payload[1] << 8 | payload[0];
 
         uint64_t cycles = (uint64_t)payload[11] << 56 |
                   (uint64_t)payload[10] << 48 |
