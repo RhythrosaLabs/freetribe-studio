@@ -53,6 +53,7 @@ under the terms of the GNU Affero General Public License as published by
 /*----- Macros -------------------------------------------------------*/
 
 #define MSG_START 0xf0
+#define SYSTEM_PROFILE_PAYLOAD_LENGTH 12
 
 /*----- Typedefs -----------------------------------------------------*/
 
@@ -510,7 +511,7 @@ static t_status _respond_system_profile(t_profile stats) {
     };
 
     _transmit_message(MSG_TYPE_SYSTEM, SYSTEM_PROFILE, payload,
-                      sizeof(payload));
+                      SYSTEM_PROFILE_PAYLOAD_LENGTH);
 
     return SUCCESS;
 }
