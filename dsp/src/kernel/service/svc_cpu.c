@@ -505,6 +505,8 @@ static t_status _respond_system_profile(t_profile stats) {
         (stats.period >> 16) & 0xff, (stats.period >> 24) & 0xff,
         stats.cycles & 0xff,         (stats.cycles >> 8) & 0xff,
         (stats.cycles >> 16) & 0xff, (stats.cycles >> 24) & 0xff,
+        (stats.cycles >> 32) & 0xff, (stats.cycles >> 40) & 0xff,
+        (stats.cycles >> 48) & 0xff, (stats.cycles >> 56) & 0xff,
     };
 
     _transmit_message(MSG_TYPE_SYSTEM, SYSTEM_PROFILE, payload,
